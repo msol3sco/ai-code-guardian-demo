@@ -59,6 +59,8 @@ class ProbeTests(unittest.TestCase):
         self.assertIsNone(result.reason)
         self.assertEqual(get.call_args.args, (CONFIG["url"],))
         self.assertEqual(get.call_args.kwargs["timeout"], 2.5)
+        self.assertEqual(get.call_args.kwargs["headers"]["User-Agent"], "StatusRelay/0.1")
+        self.assertTrue(get.call_args.kwargs.get("verify", True))
         self.assertFalse(get.call_args.kwargs["allow_redirects"])
         self.assertTrue(get.call_args.kwargs["stream"])
         get.return_value.__exit__.assert_called_once()

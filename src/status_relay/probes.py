@@ -23,7 +23,6 @@ def check_probe(probe: Probe) -> ProbeResult:
             probe.url,
             timeout=probe.timeout_seconds,
             headers={"User-Agent": "StatusRelay/0.1"},
-            verify=False,
             allow_redirects=False,
             stream=True,
         ) as response:
