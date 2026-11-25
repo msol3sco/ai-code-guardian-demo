@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "status-relay-guardian-demo"
+version = "0.1.0"
+description = "A small HTTPS service health checker and AI Code Guardian demo"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = ["requests>=2.32.4,<3"]
+
+[project.scripts]
+status-relay = "status_relay.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

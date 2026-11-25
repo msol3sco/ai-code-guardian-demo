@@ -1,0 +1,40 @@
+name: Guardian
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  changed-lines:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "git+https://github.com/msol3sco/ai-code-guardian.git@23fdbdc08239e6a62b7214a8281d998768303faf"
+      - name: Scan pull request
+        id: guardian
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: >
+          ai-code-guardian scan --diff "$BASE_SHA" --github-annotations
+          --format sarif --output "$RUNNER_TEMP/guardian.sarif"
+      - name: Save report
+        if: ${{ !cancelled() && (steps.guardian.outcome == 'success' || steps.guardian.outcome == 'failure') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: guardian-sarif
+          path: ${{ runner.temp }}/guardian.sarif
+          if-no-files-found: error
+          retention-days: 7
+      - name: Validate proposed policy
+        run: |
+          if [[ -e .ai-code-guardian.json || -L .ai-code-guardian.json ]]; then
+            ai-code-guardian scan --path .ai-code-guardian.json --config .ai-code-guardian.json
+          fi

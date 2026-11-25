@@ -1,0 +1,16 @@
+{
+  "probes": [
+    {
+      "name": "public-pages",
+      "url": "https://example.com/",
+      "timeout_seconds": 5,
+      "expected_statuses": [200]
+    },
+    {
+      "name": "api-readiness",
+      "url": "https://api.example.invalid/ready",
+      "timeout_seconds": 2.5,
+      "expected_statuses": [200, 204]
+    }
+  ]
+}
